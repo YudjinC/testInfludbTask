@@ -1,0 +1,7 @@
+ansible_host: 192.168.88.9
+ansible_ssh_common_args: >
+  -o {{ ssh_known_hosts_option }} -o HashKnownHosts=no
+  -o ProxyCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa_parking_ansible -p 22 -W %h:%p {{ ansible_user }}@{{ nginx_proxy_ip }}"
+influxdb_database: "{{ inventory_hostname }}"
+influxdb_username: "{{ influxdb_database }}"
+influxdb_password: mgU4ABK96On

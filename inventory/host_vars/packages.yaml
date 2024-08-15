@@ -1,0 +1,5 @@
+ansible_host: packages.techincity.ru
+ansible_become_pass: "mjirhn90u489yh923"
+influxdb_database: "packages"
+influxdb_username: "{{ influxdb_database }}"
+influxdb_password: IS6x8dcy4mlN

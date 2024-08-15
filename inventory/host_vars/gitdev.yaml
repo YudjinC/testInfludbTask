@@ -1,0 +1,6 @@
+ansible_host: 172.30.11.43
+ansible_port: 22082
+
+influxdb_database: "{{ inventory_hostname }}"
+influxdb_username: "{{ influxdb_database }}"
+influxdb_password: jJHGgTDyg6r43

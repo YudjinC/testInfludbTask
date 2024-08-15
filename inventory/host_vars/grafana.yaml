@@ -1,0 +1,266 @@
+grafana_version: 9.3.6
+
+grafana_local_url: http://grafana.techincity.ru:3000
+grafana_admin_password: grafanaAdmin_9901
+
+default_influxdb_url: https://influxdb.techincity.ru:8086
+default_influxdb_user: admin
+default_influxdb_password: YEajfEduiStEPYsY8hrj
+
+grafana_custom_config:
+  server:
+    domain: grafana.techincity.ru
+    root_url: "https://grafana.techincity.ru"
+  auth.generic_oauth:
+    enabled: "true"
+    icon: signin
+    scopes: openid profile email groups
+    empty_scopes: "false"
+    allow_sign_up: "true"
+    tls_skip_verify_insecure: "false"
+    use_pkce: "true"
+    role_attribute_strict: "true"
+    allow_assign_grafana_admin: "true"
+    name: FIT OpenID Connect
+    client_id: grafana-techincity-ru
+    client_secret: jhboxtBKLSqQFqVAo6lJWfQPzT2ZB3b9
+    auth_url: https://auth.techincity.ru/dex/auth
+    token_url: https://auth.techincity.ru/dex/token
+    api_url: https://auth.techincity.ru/dex/userinfo
+    role_attribute_path: >
+      contains(groups[*], 'devops') && 'GrafanaAdmin' ||
+      contains(groups[*], 'pa') && 'Admin' ||
+      contains(groups[*], 'da') && 'Editor' ||
+      contains(groups[*], 'ser') && 'Viewer' ||
+      contains(groups[*], 'sermsk') && 'Viewer' ||
+      contains(groups[*], 'su') && 'Viewer'
+
+# Use OIDC
+grafana_users: []
+  # - name: User1
+  #   login: user1
+  #   email: user1@test.lan
+  #   password: T2CGr4HCXK
+
+grafana_datasources:
+  - name: alerts
+  - name: alerts_msk
+    database: alerts
+    influxdb_url: https://arnor.techincity.ru:8086
+  - name: msk
+    influxdb_url: https://arnor.techincity.ru:8086
+  - name: spbparking
+  - name: belparking
+  - name: astanaparking
+  - name: tulaparking
+  - name: rznparking
+  - name: ekparking
+  - name: vladimirparking
+  - name: kurskparking
+  - name: kznparking
+  - name: perm
+  - name: permparking
+  - name: tverparking
+  - name: yarparking
+  - name: tmnparking
+  - name: kalugaparking
+  - name: sochiparking
+  - name: mkalaparking
+  - name: vrnparking
+  - name: kharkovparking
+  - name: novosibparking
+  - name: nci
+  - name: nci2
+  - name: mail_park
+  - name: shtrih_openvpn
+  - name: msk_pp
+  - name: msk_test
+  - name: vrnsova
+  - name: docker_registry
+  - name: redmine
+  - name: generalmap
+  - name: camera_runners
+  - name: infr_prk_backup
+  - name: parkingqa3
+  - name: parking_test_k8s
+  - name: belgorod_k8s
+  - name: vrn_k8s
+  - name: lipetsk_k8s
+  - name: ekparking_k8s
+  - name: izh_k8s
+  - name: gitlab_runners
+
+
+grafana_dashboards:
+  # - name: problems
+  #   template: "{{ inventory_dir }}/files/grafana/problems.json"
+  #   datasource: alerts
+  #   overwrite: true
+  # - name: problems_msk
+  #   template: "{{ inventory_dir }}/files/grafana/problems_msk.json"
+  #   datasource: alerts_msk
+  #   overwrite: true
+  - name: msk load
+    template: "{{ inventory_dir }}/files/grafana/load2.json"
+    datasource: msk
+    overwrite: true
+  - name: generalmap load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: generalmap
+    overwrite: true
+  - name: camera_runners load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: camera_runners
+    overwrite: true
+  - name: spbparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: spbparking
+    overwrite: true
+  - name: belparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: belparking
+    overwrite: true
+  - name: astanaparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: astanaparking
+    overwrite: true
+  - name: tulaparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: tulaparking
+    overwrite: true
+  - name: rznparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: rznparking
+    overwrite: true
+  - name: ekparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: ekparking
+    overwrite: true
+  - name: vladimirparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: vladimirparking
+    overwrite: true
+  - name: kurskparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: kurskparking
+    overwrite: true
+  - name: kznparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: kznparking
+    overwrite: true
+  - name: perm load
+    template: "{{ inventory_dir }}/files/grafana/load2.json"
+    datasource: perm
+    overwrite: true
+  - name: permparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: permparking
+    overwrite: true
+  - name: tverparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: tverparking
+    overwrite: true
+  - name: yarparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: yarparking
+    overwrite: true
+  - name: sochiparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: sochiparking
+    overwrite: true
+  - name: mkalaparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: mkalaparking
+    overwrite: true
+  - name: kalugaparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: kalugaparking
+    overwrite: true
+  - name: tmnparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: tmnparking
+    overwrite: true
+  - name: vrnparking load
+    template: "{{ inventory_dir }}/files/grafana/load2.json"
+    datasource: vrnparking
+    overwrite: true
+  - name: kharkovparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: kharkovparking
+    overwrite: true
+  - name: novosibparking load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: novosibparking
+    overwrite: true
+  - name: nci load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: nci
+    overwrite: true
+  - name: nci2 load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: nci2
+    overwrite: true
+  - name: mail-park load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: mail_park
+    overwrite: true
+  - name: shtrih_openvpn load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: shtrih_openvpn
+    overwrite: true
+  - name: msk_pp
+    template: "{{ inventory_dir }}/files/grafana/load2.json"
+    datasource: msk_pp
+    overwrite: true
+  - name: msk_test
+    template: "{{ inventory_dir }}/files/grafana/load2.json"
+    datasource: msk_test
+    overwrite: true
+  - name: vrnsova
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: vrnsova
+    overwrite: true
+  - name: docker_registry
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: docker_registry
+    overwrite: true
+  - name: redmine
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: redmine
+    overwrite: true
+  - name: infr_prk_backup load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: infr_prk_backup
+    overwrite: true
+  - name: parkingqa3 load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: parkingqa3
+    overwrite: true
+  - name: parking_test_k8s load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: parking_test_k8s
+    overwrite: true
+  - name: belgorod-k8s load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: belgorod_k8s
+    overwrite: true
+  - name: vrn-k8s load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: vrn_k8s
+    overwrite: true
+  - name: lipetsk_k8s load
+    template: "{{ inventory_dir }}/files/grafana/load_k8s.json"
+    datasource: lipetsk_k8s
+    overwrite: true
+  - name: ekparking_k8s load
+    template: "{{ inventory_dir }}/files/grafana/load_k8s.json"
+    datasource: ekparking_k8s
+    overwrite: true
+  - name: izhparking_k8s load
+    template: "{{ inventory_dir }}/files/grafana/load_k8s.json"
+    datasource: izh_k8s
+    overwrite: true
+  - name: gitlab-runners load
+    template: "{{ inventory_dir }}/files/grafana/load.json"
+    datasource: gitlab_runners
+    overwrite: true

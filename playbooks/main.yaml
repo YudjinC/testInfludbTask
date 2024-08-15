@@ -1,0 +1,3 @@
+- hosts: telegraf
+  roles:
+    - role: ../../../roles/monitoring/influxdb_todo

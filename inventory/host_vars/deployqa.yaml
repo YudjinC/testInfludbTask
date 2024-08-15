@@ -1,0 +1,4 @@
+ansible_host: deployqa.techincity.ru
+influxdb_database: "deployqa"
+influxdb_username: "{{ influxdb_database }}"
+influxdb_password: F36tTjGrQy34g8

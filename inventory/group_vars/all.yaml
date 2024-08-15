@@ -1,0 +1,12 @@
+ansible_user: ansible
+ansible_become_pass: c8b25e72e03da7595
+ssh_known_hosts_option: "UserKnownHostsFile={{ inventory_dir + '/files/ssh/known_hosts' }}"
+ansible_ssh_common_args: '-o {{ ssh_known_hosts_option }} -o HashKnownHosts=no'
+
+service_name: "{{ inventory_hostname }}"
+service_name_influxdb: "{{ service_name }}"
+
+router_external_ip: 82.151.111.52
+router_internal_ip: 172.30.11.27
+nginx_proxy_ip: "{{ router_internal_ip }}"
+

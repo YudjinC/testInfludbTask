@@ -1,0 +1,12 @@
+ansible_host: 172.22.32.88
+
+telegraf_deb_url: https://dl.influxdata.com/telegraf/releases/telegraf_1.14.5-1_arm64.deb
+
+telegraf_version: "1.14.5"
+
+service_name: infra
+service_name_influxdb: gitlab_runners
+
+disk:
+  mount_points:
+    - "/mnt/disk"

@@ -1,0 +1,60 @@
+ansible_host: localhost
+ansible_ssh_pipelining: false
+
+influxdb_database: "{{ inventory_hostname }}"
+influxdb_username: "{{ influxdb_database }}"
+influxdb_password: q32jVXiDyqFd
+
+http_response_template:
+  name: http_response
+  address: "https://xxDOMAINxx"
+  alerts:
+  - name: http_response_xxENVxx_portal
+    alert_message_header: "Portal xxDOMAINxx status"
+    trigger_type: threshold
+    measurement_field: http_response_code
+    window: "{{ default_window }}"
+    aggregate_function: min
+    critical_threshold: 200
+    critical_condition: "!= crit"
+    where_filter: "lambda: \"server\" == 'https://xxDOMAINxx'"
+    group_by: "'env','env_type','host','method','server'"
+  - name: http_response_xxENVxx_portal_deadman
+    alert_message_header: "Portal xxDOMAINxx response"
+    trigger_type: deadman
+    where_filter: "lambda: \"server\" == 'https://xxDOMAINxx'"
+    group_by: "'env','env_type','host','method','server'"
+
+
+metrics:
+  - name: cpu
+    alerts:
+      - name: cpu_user_usage
+        alert_message_header: "cpu user usage"
+        trigger_type: threshold
+        measurement_field: usage_user
+        window: "{{ default_window }}"
+        warning_threshold: 90
+        warning_condition: "> warn"
+        critical_threshold: 95
+        critical_condition: "> crit"
+
+      - name: cpu_iowait_usage
+        alert_message_header: "cpu iowait usage"
+        trigger_type: threshold
+        measurement_field: usage_iowait
+        window: "{{ default_window }}"
+        warning_threshold: 70
+        warning_condition: "> warn"
+        critical_threshold: 90
+        critical_condition: "> crit"
+
+      - "{{ alert_settings.cpu_deadman }}"
+  - name: disk
+    alerts:
+      - "{{ alert_settings.disk_usage }}"
+  - name: swap
+    alerts:
+      - "{{ alert_settings.swap_usage }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','deploy.techincity.ru') | regex_replace('xxENVxx','deploy') | regex_replace('200', '401') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','deployqa.techincity.ru') | regex_replace('xxENVxx','deployqa') | regex_replace('200', '401') }}"

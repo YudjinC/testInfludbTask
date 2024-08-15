@@ -1,0 +1,9 @@
+ansible_host: 172.30.11.137
+
+service_name: infra
+service_name_influxdb: gitlab_runners
+
+disk:
+  mount_points:
+    - "/"
+    - "/var"

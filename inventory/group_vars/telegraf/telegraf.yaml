@@ -1,0 +1,35 @@
+telegraf_deb_url: https://dl.influxdata.com/telegraf/releases/telegraf_1.8.2-1_amd64.deb
+telegraf_version: "1.19.4_fit-1"
+influxdb_host: influxdb.techincity.ru
+influxdb_port: 8086
+influxdb_remote_url: "https://influxdb.techincity.ru:443"
+influxdb_inventory_hostname: influxdb_main
+kapacitor_inventory_hostname: kapacitor_main
+influxdb_database: "{{ service_name_influxdb }}"
+influxdb_username: "{{ service_name }}"
+influxdb_password: fJh7sQu4rg63
+retention_policy: rp_1_year
+influxdb_alerts_database: "{{ hostvars.kapacitor_main.influxdb_alerts_database }}"
+output_measurement: "{{ hostvars.kapacitor_main.influxdb_alerts_database }}"
+
+
+
+tags:
+  env: "{{ influxdb_database }}"
+  env_type: production
+
+default_response_string_match: "\\\"status\\\": \\\"ok\\\""
+
+default_alert_destinations:
+  - name: production_monitoring
+    type: telegram
+    telegram_chat_id: "-1001606899371"
+  - name: alerta
+    type: alerta
+
+alert_destinations: "{{ default_alert_destinations }}"
+
+alert_destinations_msk_priority_1:
+  - name: msk_prod_monitoring
+    type: telegram
+    telegram_chat_id: "-267854906"

@@ -1,0 +1,9 @@
+ansible_host: nci3.techincity.ru
+
+service_name: infra
+service_name_influxdb: gitlab_runners
+
+disk:
+  mount_points:
+    - "/"
+    - "/var"

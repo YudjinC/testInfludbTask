@@ -1,0 +1,130 @@
+influxdb_remote_url: https://172.30.11.146:8086
+service_name: infra
+service_name_influxdb: influxdb
+
+http_response_template:
+  name: http_response
+  address: "https://xxDOMAINxx"
+  alerts:
+  - name: http_response_xxENVxx_portal
+    alert_message_header: "Portal xxDOMAINxx status"
+    trigger_type: threshold
+    measurement_field: http_response_code
+    lambda_field: result_code
+    window: "{{ default_window }}"
+    aggregate_function: min
+    critical_threshold: 200
+    # critical_condition: "!= crit"
+    critical_condition:  "!= crit OR \"result_code\" != 1"
+    where_filter: "lambda: \"server\" == 'https://xxDOMAINxx'"
+    group_by: "'env','env_type','host','method','server'"
+    alert_destinations: "{{ default_alert_destinations }}"
+  - name: http_response_xxENVxx_portal_deadman
+    alert_message_header: "Portal xxDOMAINxx response"
+    trigger_type: deadman
+    where_filter: "lambda: \"server\" == 'https://xxDOMAINxx'"
+    group_by: "'env','env_type','host','method','server'"
+    alert_destinations: "{{ default_alert_destinations }}"
+
+metrics:
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','astanapark.kz') | regex_replace('xxENVxx','ast') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','belparking.ru') | regex_replace('xxENVxx','bel') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','ek-parking.ru') | regex_replace('xxENVxx','ek') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','kalugaparking.ru') | regex_replace('xxENVxx','kaluga') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','kurskparking.ru') | regex_replace('xxENVxx','kursk') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','parkingkzn.ru') | regex_replace('xxENVxx','kzn') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','rzn-parking.ru') | regex_replace('xxENVxx','rzn') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','parking.spb.ru') | regex_replace('xxENVxx','spb') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','tulaparking.ru') | regex_replace('xxENVxx','tula') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','vrnparking.ru') | regex_replace('xxENVxx','vrnparking') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','parking.anapa.ru') | regex_replace('xxENVxx','anapa_ais') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','izhparking.ru') | regex_replace('xxENVxx','izh-ais') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','stv-parking.ru') | regex_replace('xxENVxx','stvparking') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','gitlab.techincity.ru') | regex_replace('xxENVxx','gitlab') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','gitdev.techincity.ru') | regex_replace('xxENVxx','gitdev') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','cloud.gorparkovki.ru:9000/minio/health/live') | regex_replace('xxENVxx','cloud_gp_minio') }}"
+  # - "{{ http_response_template | regex_replace('xxDOMAINxx','redmine.techincity.ru') | regex_replace('xxENVxx','redmine') }}"
+  - "{{ http_response_template | regex_replace('https','http') | regex_replace('xxDOMAINxx','grafana.techincity.ru:3000') | regex_replace('xxENVxx','grafana') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','packages.techincity.ru/parking/7/x86_64/repodata/repomd.xml') | regex_replace('xxENVxx','packages') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','npm.techincity.ru') | regex_replace('xxENVxx','npm') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','elk.fitdev.ru') | regex_replace('xxENVxx','elk') | regex_replace('200','401') }}"
+  # - "{{ http_response_template | regex_replace('xxDOMAINxx','lk.parkingtest.ru') | regex_replace('xxENVxx','msk-pp') }}"
+  # - "{{ http_response_template | regex_replace('xxDOMAINxx','lk.parking.mos.ru') | regex_replace('xxENVxx','msk') | regex_replace('default_alert_destinations','alert_destinations_msk_priority_1')}}"
+  # - "{{ http_response_template | regex_replace('xxDOMAINxx','parking.mos.ru') | regex_replace('xxENVxx','msk') | regex_replace('default_alert_destinations','alert_destinations_msk_priority_1')}}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','parking-54.ru') | regex_replace('xxENVxx','novosib') }}"
+  - "{{ http_response_template | regex_replace('xxDOMAINxx','parking48.ru') | regex_replace('xxENVxx','lipetsk') }}"
+
+  - name: cpu
+    alerts:
+      - "{{ alert_settings.cpu_user_usage }}"
+      - "{{ alert_settings.cpu_iowait_usage }}"
+      - "{{ alert_settings.cpu_deadman }}"
+  - name: disk
+    alerts:
+      - "{{ alert_settings.disk_usage }}"
+  - name: swap
+    alerts:
+      - "{{ alert_settings.swap_usage }}"
+
+  - name: ssl_cert
+    interval: "1h"
+    certs:
+      - kalugaparking.ru
+      - rzn-parking.ru
+      - ek-parking.ru
+      - vrnparking.ru
+      - xn--80aafapglob6ageafqh.xn--p1ai #Voronezh cyrillc
+      - belparking.ru
+      - elk.fitdev.ru
+      - parking48.ru
+      - parking-54.ru
+      - parking.spb.ru
+      - npm.techincity.ru
+      - docker-registry.fitdev.ru:15650
+      - parking.anapa.ru
+      - kurskparking.ru
+      - izhparking.ru
+      - stv-parking.ru
+      - cloud.gorparkovki.ru:9000
+    alerts:
+    - name: ssl_cert
+      alert_message_header: "ssl cert expiration"
+      trigger_type: threshold
+      measurement_field: time_to_expire
+      warning_threshold: 20
+      window:
+          periodCount: 5
+          everyCount: 1
+      aggregate_function: max
+      warning_condition: "< warn"
+      critical_threshold: 10
+      critical_condition: "< crit"
+      value_multiplier: "0.00001157"
+      alert_message_extention: ' Server: \{\{ index .Tags "server"\}\}'
+
+  - name: dns_domain
+    interval: "1h"
+    domains:
+      - kalugaparking.ru
+      - ek-parking.ru
+      - vrnparking.ru
+      - xn--80aafapglob6ageafqh.xn--p1ai #Voronezh cyrillc
+      - belparking.ru
+      - gorparkovki.ru
+      - parking48.ru
+      - rzn-parking.ru
+      - spb.ru
+      - kurskparking.ru
+      - izhparking.ru
+      - stv-parking.ru
+    alerts:
+    - name: dns_domain
+      alert_message_header: "dns domain expiration"
+      trigger_type: threshold
+      measurement_field: time_to_expire
+      warning_threshold: 30
+      warning_condition: "< warn"
+      critical_threshold: 15
+      critical_condition: "< crit"
+      value_multiplier: "0.00001157"
+      alert_message_extention: ' Domain: \{\{ index .Tags "domain"\}\}'

@@ -1,0 +1,38 @@
+ansible_host: 192.168.88.27
+ansible_ssh_common_args: >
+  -o {{ ssh_known_hosts_option }} -o HashKnownHosts=no
+  -o ProxyCommand="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa_parking_ansible -p 22 -W %h:%p {{ ansible_user }}@{{ nginx_proxy_ip }}"
+influxdb_database: "elk"
+influxdb_username: "{{ influxdb_database }}"
+influxdb_password: HY7kht4fr^Rf
+
+metrics:
+  - name: cpu
+    alerts:
+      - "{{ alert_settings.cpu_user_usage }}"
+      - "{{ alert_settings.cpu_iowait_usage }}"
+      - "{{ alert_settings.cpu_deadman }}"
+
+  - name: disk
+    alerts:
+      - "{{ alert_settings.disk_usage }}"
+
+  - name: swap
+    alerts:
+      - "{{ alert_settings.swap_usage }}"
+
+  - name: http_response
+    address: "http://127.0.0.1:9200"
+    alerts:
+      - name: http_response_elasticsearch
+        alert_message_header: "elasticsearch service status"
+        trigger_type: check_tag
+        check_name: status
+        critical_condition: "lambda: ( \"http_response_code\" != 200 )"
+        where_filter: "lambda: \"server\" =~ /.*:9200.*/"
+        alert_message_extention: ' Server: \{\{ index .Tags "server"\}\}'
+
+      - name: http_response_elasticsearch_deadman
+        alert_message_header: "elasticsearch service response"
+        trigger_type: deadman
+        where_filter: "lambda: \"server\" =~ /.*:9200.*/"

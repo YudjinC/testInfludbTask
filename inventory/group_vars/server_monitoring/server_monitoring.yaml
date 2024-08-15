@@ -1,0 +1,5 @@
+#this is common_monitoring/group_vars/server_monitoring.yaml file
+ansible_host: 172.30.11.146
+ansible_become_pass: c8b25e72e03da7595
+ansible_ssh_common_args: '-o {{ ssh_known_hosts_option }} -o HashKnownHosts=no'
+ansible_port: 22

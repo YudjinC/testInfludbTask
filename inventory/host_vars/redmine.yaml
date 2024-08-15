@@ -1,0 +1,6 @@
+ansible_host: redmine.techincity.ru
+ansible_ssh_pipelining: false
+
+influxdb_database: "{{ inventory_hostname }}"
+influxdb_username: "{{ influxdb_database }}"
+influxdb_password: FS2BvnBRKwLu

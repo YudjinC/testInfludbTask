@@ -1,0 +1,73 @@
+docker_stack_name: "docker_compose_alerta"
+
+docker_compose_path: "/var/www/monitoring/{{ docker_stack_name }}"
+
+docker_service_name: alerta
+docker_service_port: 8080
+
+docker_service_name_underlined: "{{ docker_service_name | regex_replace('-','_') }}"
+
+create_dirs:
+  - "{{ docker_compose_path }}/{{ docker_service_name }}"
+  - "{{ docker_compose_path }}/config"
+
+copy_files:
+  - src: "files/alerta/alertad.conf"
+    dest: "config/alertad.conf"
+  # - src: "files/alerta/supervisord.conf"
+  #   dest: "config/supervisord.conf"
+
+docker_registries:
+  production:
+    url: docker-registry.fitdev.ru:15650
+    login: qa
+    password: air7Queichoopi8e
+
+# https://jira.techincity.ru/browse/DEVOPS-3977 (OIDC)
+docker_compose_config_template: |
+  version: '3.1'
+  services:
+    alerta:
+      image: docker-registry.fitdev.ru:15650/fabit/alerta-web:8.7.0-oidc-fixed
+      ports:
+        - 8080:8080
+      depends_on:
+        - db
+      volumes:
+        - ./config/alertad.conf:/app/alertad.conf
+        # - ./config/supervisord.conf:/app/supervisord.conf
+
+      labels:
+        config_hash: {{ lookup('template', inventory_dir + '/files/alerta/alertad.conf') | hash('md5') }}
+
+      environment:
+        - DEFAULT_ENVIRONMENT=production
+        - DATABASE_URL=postgres://postgres:drCY8Gre8y4w@db:5432/monitoring
+        - AUTH_REQUIRED=True
+        # - CUSTOMER_VIEWS=True
+        - ADMIN_USERS=admin@after.install,yuriy_p@gorparkovki.ru,boris.lyuts@fabit.ru
+        - ADMIN_PASSWORD=kjGFuf65ejg
+        - PLUGINS=reject,blackout,normalise,enhance,heartbeat
+        - INSTALL_PLUGINS=normalise,enhance
+        - DEBUG=0
+
+      restart: always
+      logging:
+        driver: syslog
+        options:
+          tag: "alerta_common"
+    db:
+      image: postgres:11
+      volumes:
+        - ./pg-data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: monitoring
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: drCY8Gre8y4w
+      restart: always
+      logging:
+        driver: syslog
+        options:
+          tag: "alerta_common_pg"
+
+docker_compose_config: "{{ docker_compose_config_template | from_yaml }}"

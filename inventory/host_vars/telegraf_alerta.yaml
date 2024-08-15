@@ -1,0 +1,3 @@
+influxdb_database: "{{ inventory_hostname }}"
+influxdb_username: "{{ influxdb_database }}"
+influxdb_password: kjHGdth2I6hudr
