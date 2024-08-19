@@ -1,5 +1,5 @@
 - name: add influxdb database
-  influxdb_database:
+  influxdb:
     hostname: "{{ influxdb_host }}"
     database_name: "{{ influxdb_database }}"
     database_state: present
@@ -7,7 +7,7 @@
   delegate_to: "{{ influxdb_inventory_hostname }}"
 
 - name: add user to unfluxdb, allow database access, create default database retention policy
-  influxdb_database:
+  influxdb:
     hostname: "{{ influxdb_host }}"
     username: "{{ influxdb_username }}"
     password: "{{ influxdb_password }}"
