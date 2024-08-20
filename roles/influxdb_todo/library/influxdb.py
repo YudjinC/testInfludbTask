@@ -1,31 +1,31 @@
 from ansible.module_utils.basic import AnsibleModule
 import json
 import urllib
-import urllib2
+import urllib.request as urllib2
 import base64
 import ssl
 
 
 def influx_query(hostname, query, module_auth, module):
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
+   ctx = ssl.create_default_context()
+   ctx.check_hostname = False
+   ctx.verify_mode = ssl.CERT_NONE
 
-    url = 'https://' + hostname + ':8086/query'
-    request = urllib2.Request(url=url, data=urllib.urlencode({'q': query}))
-    if module_auth == 'true':
-        base64string = base64.b64encode(
-                          '%s:%s' % ('admin', 'YEajfEduiStEPYsY8hrj')
-                       )
-        request.add_header("Authorization", "Basic %s" % base64string)
+   url = 'https://' + hostname + ':8086/query'
+   request = urllib2.Request(url=url, data=urllib.urlencode({'q': query}))
+   if module_auth == 'true':
+       base64string = base64.b64encode(
+                         '%s:%s' % ('admin', 'YEajfEduiStEPYsY8hrj')
+                      )
+       request.add_header("Authorization", "Basic %s" % base64string)
 
-    try:
-        return urllib2.urlopen(request, context=ctx)
-    except:
-        module.fail_json(
-            msg='Failed to query influxdb: \
-            URL={} QUERY={}'.format(url, query)
-        )
+   try:
+       return urllib2.urlopen(request, context=ctx)
+   except:
+       module.fail_json(
+           msg='Failed to query influxdb: \
+           URL={} QUERY={}'.format(url, query)
+       )
 
 
 def check_module_changed(
